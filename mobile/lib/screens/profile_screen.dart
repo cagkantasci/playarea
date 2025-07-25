@@ -11,11 +11,9 @@ class ProfileScreen extends StatelessWidget {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         final user = authProvider.user;
-        
+
         if (user == null) {
-          return const Center(
-            child: Text('Kullanıcı bilgisi yüklenemedi'),
-          );
+          return const Center(child: Text('Kullanıcı bilgisi yüklenemedi'));
         }
 
         return SingleChildScrollView(
@@ -48,22 +46,25 @@ class ProfileScreen extends StatelessWidget {
                           children: [
                             Text(
                               user.name,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               user.email,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Colors.grey.shade600,
-                              ),
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(color: Colors.grey.shade600),
                             ),
                             const SizedBox(height: 4),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: _getRoleColor(user.role).withOpacity(0.2),
+                                color: _getRoleColor(
+                                  user.role,
+                                ).withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -92,7 +93,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
+
               _InfoCard(
                 icon: Icons.person,
                 title: 'Ad Soyad',
@@ -181,19 +182,25 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: authProvider.isLoading ? null : () async {
-                    final confirmed = await _showLogoutConfirmation(context);
-                    if (confirmed == true) {
-                      await authProvider.logout();
-                      if (context.mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                          (route) => false,
-                        );
-                      }
-                    }
-                  },
-                  icon: authProvider.isLoading 
+                  onPressed: authProvider.isLoading
+                      ? null
+                      : () async {
+                          final confirmed = await _showLogoutConfirmation(
+                            context,
+                          );
+                          if (confirmed == true) {
+                            await authProvider.logout();
+                            if (context.mounted) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                          }
+                        },
+                  icon: authProvider.isLoading
                       ? const SizedBox(
                           width: 16,
                           height: 16,
@@ -258,9 +265,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.red,
-            ),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Çıkış Yap'),
           ),
         ],
@@ -279,9 +284,7 @@ class ProfileScreen extends StatelessWidget {
         color: Colors.blue,
       ),
       children: [
-        const Text(
-          'Rol tabanlı makine kontrol ve arıza takip sistemi.',
-        ),
+        const Text('Rol tabanlı makine kontrol ve arıza takip sistemi.'),
         const SizedBox(height: 16),
         const Text(
           'Bu uygulama makinelerin durumunu takip etmek, arızaları bildirmek ve kontrol listelerini yönetmek için tasarlanmıştır.',
@@ -308,10 +311,7 @@ class _InfoCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(icon, color: Colors.blue),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
         subtitle: Text(subtitle),
       ),
     );

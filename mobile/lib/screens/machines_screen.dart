@@ -91,61 +91,62 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 child: machineProvider.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : machineProvider.error != null
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.error_outline,
-                                  size: 64,
-                                  color: Colors.red.shade300,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  machineProvider.error!,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: () => machineProvider.loadMachines(),
-                                  child: const Text('Tekrar Dene'),
-                                ),
-                              ],
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red.shade300,
                             ),
-                          )
-                        : machineProvider.filteredMachines.isEmpty
-                            ? const Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.precision_manufacturing_outlined,
-                                      size: 64,
-                                      color: Colors.grey,
-                                    ),
-                                    SizedBox(height: 16),
-                                    Text(
-                                      'Makine bulunamadı',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : RefreshIndicator(
-                                onRefresh: () => machineProvider.loadMachines(),
-                                child: ListView.builder(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  itemCount: machineProvider.filteredMachines.length,
-                                  itemBuilder: (context, index) {
-                                    final machine = machineProvider.filteredMachines[index];
-                                    return MachineCard(machine: machine);
-                                  },
-                                ),
+                            const SizedBox(height: 16),
+                            Text(
+                              machineProvider.error!,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () => machineProvider.loadMachines(),
+                              child: const Text('Tekrar Dene'),
+                            ),
+                          ],
+                        ),
+                      )
+                    : machineProvider.filteredMachines.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.precision_manufacturing_outlined,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Makine bulunamadı',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
                               ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () => machineProvider.loadMachines(),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: machineProvider.filteredMachines.length,
+                          itemBuilder: (context, index) {
+                            final machine =
+                                machineProvider.filteredMachines[index];
+                            return MachineCard(machine: machine);
+                          },
+                        ),
+                      ),
               ),
             ],
           );
@@ -166,7 +167,9 @@ class MachineCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: _getStatusColor(machine.status).withOpacity(0.2),
+          backgroundColor: _getStatusColor(
+            machine.status,
+          ).withValues(alpha: 0.2),
           child: Icon(
             _getStatusIcon(machine.status),
             color: _getStatusColor(machine.status),
@@ -185,9 +188,14 @@ class MachineCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(machine.status).withOpacity(0.2),
+                    color: _getStatusColor(
+                      machine.status,
+                    ).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -221,10 +229,7 @@ class MachineCard extends StatelessWidget {
             ),
             const PopupMenuItem(
               value: 'maintenance',
-              child: ListTile(
-                leading: Icon(Icons.build),
-                title: Text('Bakım'),
-              ),
+              child: ListTile(leading: Icon(Icons.build), title: Text('Bakım')),
             ),
           ],
           onSelected: (value) {

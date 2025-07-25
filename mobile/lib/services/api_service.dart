@@ -2,37 +2,42 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:8000/api';
+  static const String baseUrl =
+      'http://10.0.2.2:8000/api'; // Android emulator için
   static late Dio _dio;
   static String? _token;
 
   static void initialize() {
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
 
     // Token interceptor
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        if (_token != null) {
-          options.headers['Authorization'] = 'Bearer $_token';
-        }
-        handler.next(options);
-      },
-      onError: (error, handler) async {
-        if (error.response?.statusCode == 401) {
-          await clearToken();
-          // Redirect to login if needed
-        }
-        handler.next(error);
-      },
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          if (_token != null) {
+            options.headers['Authorization'] = 'Bearer $_token';
+          }
+          handler.next(options);
+        },
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401) {
+            await clearToken();
+            // Redirect to login if needed
+          }
+          handler.next(error);
+        },
+      ),
+    );
   }
 
   static Future<void> setToken(String token) async {
@@ -54,7 +59,10 @@ class ApiService {
 
   static bool get isAuthenticated => _token != null;
 
-  static Future<Response> get(String path, {Map<String, dynamic>? params}) async {
+  static Future<Response> get(
+    String path, {
+    Map<String, dynamic>? params,
+  }) async {
     return await _dio.get(path, queryParameters: params);
   }
 

@@ -3,15 +3,16 @@ import 'package:provider/provider.dart';
 import 'services/api_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/machine_provider.dart';
+import 'providers/issue_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // API servisini başlat
   ApiService.initialize();
-  
+
   runApp(const MyApp());
 }
 
@@ -24,16 +25,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MachineProvider()),
+        ChangeNotifierProvider(create: (_) => IssueProvider()),
       ],
       child: MaterialApp(
         title: 'Makine Kontrol Sistemi',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
-          appBarTheme: const AppBarTheme(
-            centerTitle: true,
-            elevation: 2,
-          ),
+          appBarTheme: const AppBarTheme(centerTitle: true, elevation: 2),
           cardTheme: const CardThemeData(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -41,9 +40,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
@@ -51,10 +48,7 @@ class MyApp extends StatelessWidget {
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -85,13 +79,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkAuthStatus() async {
     // Token yükle
     await ApiService.loadToken();
-    
+
     if (mounted) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
+
       if (ApiService.isAuthenticated) {
         await authProvider.loadUser();
-        
+
         if (authProvider.user != null && mounted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const DashboardScreen()),

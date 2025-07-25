@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().user;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Makine Kontrol Sistemi'),
@@ -70,11 +70,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   leading: const Icon(Icons.logout),
                   title: const Text('Çıkış Yap'),
                   onTap: () async {
+                    final navigator = Navigator.of(context);
                     Navigator.pop(context);
                     await context.read<AuthProvider>().logout();
                     if (mounted) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      navigator.pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
                       );
                     }
                   },
@@ -106,10 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.report_problem),
             label: 'Arızalar',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
       ),
     );
@@ -158,12 +158,12 @@ class DashboardHomeScreen extends StatelessWidget {
           // İstatistikler
           Text(
             'Özet',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          
+
           Row(
             children: [
               Expanded(
@@ -178,7 +178,10 @@ class DashboardHomeScreen extends StatelessWidget {
               Expanded(
                 child: _StatCard(
                   title: 'Aktif Makine',
-                  value: machineProvider.machines.where((m) => m.isActive).length.toString(),
+                  value: machineProvider.machines
+                      .where((m) => m.isActive)
+                      .length
+                      .toString(),
                   icon: Icons.check_circle,
                   color: Colors.green,
                 ),
@@ -186,13 +189,16 @@ class DashboardHomeScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          
+
           Row(
             children: [
               Expanded(
                 child: _StatCard(
                   title: 'Bakımda',
-                  value: machineProvider.machines.where((m) => m.isMaintenance).length.toString(),
+                  value: machineProvider.machines
+                      .where((m) => m.isMaintenance)
+                      .length
+                      .toString(),
                   icon: Icons.build,
                   color: Colors.orange,
                 ),
@@ -201,7 +207,10 @@ class DashboardHomeScreen extends StatelessWidget {
               Expanded(
                 child: _StatCard(
                   title: 'Arızalı',
-                  value: machineProvider.machines.where((m) => m.isInactive).length.toString(),
+                  value: machineProvider.machines
+                      .where((m) => m.isInactive)
+                      .length
+                      .toString(),
                   icon: Icons.error,
                   color: Colors.red,
                 ),
@@ -213,12 +222,12 @@ class DashboardHomeScreen extends StatelessWidget {
           // Hızlı aksiyonlar
           Text(
             'Hızlı İşlemler',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          
+
           if (user?.isOperator == true || user?.isAdmin == true) ...[
             ListTile(
               leading: const Icon(Icons.add, color: Colors.blue),
@@ -230,7 +239,7 @@ class DashboardHomeScreen extends StatelessWidget {
             ),
             const Divider(),
           ],
-          
+
           ListTile(
             leading: const Icon(Icons.search, color: Colors.green),
             title: const Text('Makine Ara'),
@@ -240,7 +249,7 @@ class DashboardHomeScreen extends StatelessWidget {
             },
           ),
           const Divider(),
-          
+
           ListTile(
             leading: const Icon(Icons.checklist, color: Colors.purple),
             title: const Text('Kontrol Listesi'),
